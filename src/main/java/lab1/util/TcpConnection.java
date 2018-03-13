@@ -9,18 +9,18 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Optional;
 
-public class TcpConnection{
+public class TcpConnection {
 
     private Socket socket;
     private BufferedReader in;
     private PrintWriter out;
     private Gson gson;
 
-    private TcpConnection(Socket socket, BufferedReader in, PrintWriter out) {
+    private TcpConnection(Socket socket, BufferedReader in, PrintWriter out, Gson gson) {
         this.socket = socket;
         this.in = in;
         this.out = out;
-        this.gson = new Gson();
+        this.gson = gson;
     }
 
     public static Optional<TcpConnection> connectToServer(String hostName, int portNumber) throws IOException {
@@ -33,7 +33,7 @@ public class TcpConnection{
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            tcpConnection = new TcpConnection(socket, in, out);
+            tcpConnection = new TcpConnection(socket, in, out, new Gson());
         } catch (IOException e) {
             e.printStackTrace();
             socket.close();
@@ -60,7 +60,7 @@ public class TcpConnection{
     }
 
     public Message recvMsg() throws IOException {
-        return gson.fromJson(recv(),Message.class);
+        return gson.fromJson(recv(), Message.class);
     }
 
 }

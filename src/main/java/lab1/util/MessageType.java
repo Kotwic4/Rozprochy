@@ -5,6 +5,7 @@ public enum MessageType {
     HelloUdp,
     MsgTcp,
     MsgUdp,
+    MsgMulti,
     Rejected,
     Quit
 }

@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import lab1.util.Message;
 import lab1.util.MessageType;
 import lab1.util.TcpConnection;
-import lab1.util.UdpServer;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -28,7 +27,7 @@ public class ConnectionManager {
     public synchronized void addClient(TcpConnection tcpConnection) {
         if (clients.size() < connectionLimit) {
             ClientConnection clientConnection = new ClientConnection(tcpConnection, nextId, this, new Gson());
-            tcpConnection.send(new Message(nextId, MessageType.HelloTcp,"Your ID is : " + nextId));
+            tcpConnection.send(new Message(nextId, MessageType.HelloTcp, "Your ID is : " + nextId));
             clients.put(nextId, clientConnection);
             executor.execute(clientConnection);
             nextId++;

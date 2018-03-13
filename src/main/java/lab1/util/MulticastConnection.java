@@ -3,12 +3,14 @@ package lab1.util;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
 import java.util.Arrays;
 
-public class UdpConnection {
+public class MulticastConnection {
 
-    private DatagramSocket socket;
+    private MulticastSocket socket;
 
     private InetAddress address;
 
@@ -16,25 +18,22 @@ public class UdpConnection {
 
     private Gson gson;
 
-    private UdpConnection(DatagramSocket socket, int portNumber, InetAddress address, Gson gson) {
+    private MulticastConnection(MulticastSocket socket, int portNumber, InetAddress address, Gson gson) {
         this.socket = socket;
         this.address = address;
         this.portNumber = portNumber;
         this.gson = gson;
     }
 
-    public static UdpConnection connect(int portNumber, String host) throws SocketException, UnknownHostException {
-        DatagramSocket socket = new DatagramSocket();
+    public static MulticastConnection join(int portNumber, String host) throws IOException {
+        MulticastSocket socket = new MulticastSocket(portNumber);
         InetAddress address = InetAddress.getByName(host);
-        return new UdpConnection(socket, portNumber, address, new Gson());
+        socket.joinGroup(address);
+        return new MulticastConnection(socket, portNumber, address, new Gson());
     }
 
-    public static UdpConnection connect(int portNumber, InetAddress address) throws SocketException {
-        DatagramSocket socket = new DatagramSocket();
-        return new UdpConnection(socket, portNumber, address, new Gson());
-    }
-
-    public void close() {
+    public void close() throws IOException {
+        socket.leaveGroup(address);
         socket.close();
     }
 

@@ -5,7 +5,7 @@ import lab1.util.TcpServer;
 
 import java.io.IOException;
 
-public class TcpClientCollector extends Thread{
+public class TcpClientCollector extends Thread {
 
     private TcpServer tcpServer;
     private ConnectionManager connectionManager;

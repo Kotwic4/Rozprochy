@@ -1,9 +1,6 @@
 package lab1.client;
 
-import lab1.util.Message;
-import lab1.util.MessageType;
-import lab1.util.TcpConnection;
-import lab1.util.UdpConnection;
+import lab1.util.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,13 +12,15 @@ public class ChatWriter extends Thread {
 
     private TcpConnection tcpConnection;
     private UdpConnection udpConnection;
+    private MulticastConnection multicastConnection;
     private int clientId;
     private CompletableFuture<Boolean> quit;
     private boolean closed = false;
 
-    public ChatWriter(TcpConnection tcpConnection, UdpConnection udpConnection, int clientId, CompletableFuture<Boolean> quit) {
+    public ChatWriter(TcpConnection tcpConnection, UdpConnection udpConnection, MulticastConnection multicastConnection, int clientId, CompletableFuture<Boolean> quit) {
         this.tcpConnection = tcpConnection;
         this.udpConnection = udpConnection;
+        this.multicastConnection = multicastConnection;
         this.clientId = clientId;
         this.quit = quit;
     }
@@ -37,25 +36,25 @@ public class ChatWriter extends Thread {
                     tcpConnection.send(new Message(clientId, MessageType.Quit, ""));
                     closed = true;
                     break;
-                }
-                else if (input.equals("U")) {
+                } else if (input.equals("U")) {
                     input = br.readLine();
                     udpConnection.send(new Message(clientId, MessageType.MsgUdp, input));
-                }
-                else{
+                } else if (input.equals("M")) {
+                    input = br.readLine();
+                    multicastConnection.send(new Message(clientId, MessageType.MsgMulti, input));
+                } else {
                     tcpConnection.send(new Message(clientId, MessageType.MsgTcp, input));
                 }
             }
-        }
-        catch (IOException e) {
-            if(!closed){
+        } catch (IOException e) {
+            if (!closed) {
                 e.printStackTrace();
             }
         }
         quit.complete(closed);
     }
 
-    public void close(){
+    public void close() {
         closed = true;
     }
 }

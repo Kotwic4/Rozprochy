@@ -11,18 +11,18 @@ public class Server {
     public static void main(String[] args) {
         System.out.println("Server started!");
         int portNumber = 12345;
-        int connectionLimit = 5;
+        int connectionLimit = 2;
         try {
             TcpServer tcpServer = TcpServer.bootServer(portNumber);
             UdpServer udpServer = UdpServer.bootServer(portNumber);
             ConnectionManager connectionManager = new ConnectionManager(connectionLimit);
-            TcpClientCollector tcpClientCollector = new TcpClientCollector(tcpServer,connectionManager);
-            UdpChannel udpChannel = new UdpChannel(udpServer,connectionManager, new Gson());
+            TcpClientCollector tcpClientCollector = new TcpClientCollector(tcpServer, connectionManager);
+            UdpChannel udpChannel = new UdpChannel(udpServer, connectionManager, new Gson());
             tcpClientCollector.start();
             udpChannel.start();
             System.out.println("Listen on TCP on port:" + portNumber);
             System.out.println("Listen on UDP on port:" + portNumber);
-            while(true);
+            while (true) ;
         } catch (IOException e) {
             e.printStackTrace();
         }

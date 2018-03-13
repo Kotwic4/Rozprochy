@@ -6,7 +6,7 @@ import lab1.util.TcpConnection;
 
 import java.io.IOException;
 
-public class TcpReader extends Thread{
+public class TcpReader extends Thread {
 
     private TcpConnection tcpConnection;
     private Gson gson;
@@ -21,18 +21,18 @@ public class TcpReader extends Thread{
     public void run() {
         try {
             String msg;
-            while((msg = tcpConnection.recv()) != null){
-                Message message = gson.fromJson(msg,Message.class);
-                System.out.println("TCP: "+ message.clientName + ": " + message.value);
+            while ((msg = tcpConnection.recv()) != null) {
+                Message message = gson.fromJson(msg, Message.class);
+                System.out.println("TCP: " + message.clientName + ": " + message.value);
             }
         } catch (IOException e) {
-            if(!closed){
+            if (!closed) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void close(){
+    public void close() {
         closed = true;
     }
 }

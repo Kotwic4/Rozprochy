@@ -1,7 +1,10 @@
 package lab1.server;
 
 import com.google.gson.Gson;
-import lab1.util.*;
+import lab1.util.Message;
+import lab1.util.MessageType;
+import lab1.util.TcpConnection;
+import lab1.util.UdpConnection;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -31,11 +34,10 @@ public class ClientConnection implements Runnable {
             String msg;
             while ((msg = tcpConnection.recv()) != null) {
                 System.out.println(id + ": " + msg);
-                message = gson.fromJson(msg,Message.class);
-                if(message.type == MessageType.MsgTcp){
+                message = gson.fromJson(msg, Message.class);
+                if (message.type == MessageType.MsgTcp) {
                     connectionManager.sendTcpMsg(id, message.value);
-                }
-                else if(message.type == MessageType.Quit){
+                } else if (message.type == MessageType.Quit) {
                     break;
                 }
             }
@@ -53,13 +55,13 @@ public class ClientConnection implements Runnable {
     }
 
     public synchronized void close() {
-        if(!closed){
+        if (!closed) {
             try {
                 tcpConnection.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            if(udpConnection != null){
+            if (udpConnection != null) {
                 udpConnection.close();
             }
         }
@@ -68,14 +70,14 @@ public class ClientConnection implements Runnable {
 
     public synchronized void addUdp(DatagramPacket datagramPacket) {
         try {
-            udpConnection = UdpConnection.connect(datagramPacket.getPort(),datagramPacket.getAddress());
+            udpConnection = UdpConnection.connect(datagramPacket.getPort(), datagramPacket.getAddress());
         } catch (SocketException e) {
             e.printStackTrace();
         }
     }
 
     public synchronized void sendUdpMsg(Message message) {
-        if(udpConnection != null){
+        if (udpConnection != null) {
             try {
                 udpConnection.send(gson.toJson(message));
             } catch (IOException e) {

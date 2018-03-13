@@ -27,11 +27,11 @@ public class UdpChannel extends Thread {
                 String msg = new String(datagramPacket.getData());
                 msg = msg.trim();
                 System.out.println("UDP :" + msg);
-                Message message = gson.fromJson(msg,Message.class);
-                if(message.type == MessageType.HelloUdp){
-                    connectionManager.addUdpClient(message.clientName,datagramPacket);
+                Message message = gson.fromJson(msg, Message.class);
+                if (message.type == MessageType.HelloUdp) {
+                    connectionManager.addUdpClient(message.clientName, datagramPacket);
                 }
-                if(message.type == MessageType.MsgUdp) {
+                if (message.type == MessageType.MsgUdp) {
                     connectionManager.sendUdpMsg(message.clientName, message.value);
                 }
             }

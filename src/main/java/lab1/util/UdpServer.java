@@ -6,7 +6,7 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.util.Arrays;
 
-public class UdpServer{
+public class UdpServer {
 
     private DatagramSocket socket;
 
@@ -21,7 +21,7 @@ public class UdpServer{
 
     public DatagramPacket recv() throws IOException {
         byte[] receiveBuffer = new byte[1024];
-        Arrays.fill(receiveBuffer, (byte)0);
+        Arrays.fill(receiveBuffer, (byte) 0);
         DatagramPacket receivePacket = new DatagramPacket(receiveBuffer, receiveBuffer.length);
         socket.receive(receivePacket);
         return receivePacket;
