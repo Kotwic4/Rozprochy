@@ -10,27 +10,6 @@ public class UdpServer{
 
     private DatagramSocket socket;
 
-    public static void main(String args[])
-    {
-        System.out.println("JAVA UDP SERVER");
-        DatagramSocket socket = null;
-        int portNumber = 9008;
-
-        try{
-
-
-
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-        finally {
-            if (socket != null) {
-                socket.close();
-            }
-        }
-    }
-
     public UdpServer(DatagramSocket socket) {
         this.socket = socket;
     }
