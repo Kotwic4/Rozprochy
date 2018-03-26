@@ -23,4 +23,8 @@ hs_err_pid*
 
 # IDE
 *iml
-/idea
+.idea/
+
+# Gradle
+out/
+.gradle/
