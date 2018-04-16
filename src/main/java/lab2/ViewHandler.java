@@ -24,7 +24,7 @@ class ViewHandler extends Thread {
         if (!tmp_view.getMembers().contains(local_addr)) {
             System.out.println("Not member of the new primary partition (" + tmp_view + "), will re-acquire the state");
             try {
-                ch.getState(null, 30000);
+                ch.getState(tmp_view.get(0), 30000);
             } catch (Exception ex) {
             }
         } else {

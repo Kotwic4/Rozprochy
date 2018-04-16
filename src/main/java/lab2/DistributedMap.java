@@ -2,10 +2,7 @@ package lab2;
 
 import org.jgroups.*;
 import org.jgroups.protocols.*;
-import org.jgroups.protocols.pbcast.GMS;
-import org.jgroups.protocols.pbcast.NAKACK2;
-import org.jgroups.protocols.pbcast.STABLE;
-import org.jgroups.protocols.pbcast.STATE_TRANSFER;
+import org.jgroups.protocols.pbcast.*;
 import org.jgroups.stack.ProtocolStack;
 import org.jgroups.util.Util;
 
@@ -33,7 +30,6 @@ public class DistributedMap extends ReceiverAdapter implements SimpleStringMap {
                 .addProtocol(new MERGE3())
                 .addProtocol(new FD_SOCK())
                 .addProtocol(new FD_ALL().setValue("timeout", 12000).setValue("interval", 3000))
-                .addProtocol(new VERIFY_SUSPECT())
                 .addProtocol(new BARRIER())
                 .addProtocol(new NAKACK2())
                 .addProtocol(new UNICAST3())
@@ -42,7 +38,8 @@ public class DistributedMap extends ReceiverAdapter implements SimpleStringMap {
                 .addProtocol(new UFC())
                 .addProtocol(new MFC())
                 .addProtocol(new STATE_TRANSFER())
-                .addProtocol(new FRAG2());
+                .addProtocol(new FRAG2())
+                .addProtocol(new SEQUENCER());
         protocolStack.init();
         jChannel.setReceiver(this);
         jChannel.connect(channelName);
@@ -82,7 +79,7 @@ public class DistributedMap extends ReceiverAdapter implements SimpleStringMap {
 
     @Override
     public void receive(Message msg) {
-        System.out.println("RECEIVE");
+//        System.out.println("RECEIVE");
         Operation operation = (Operation) msg.getObject();
         switch (operation.getType()) {
             case PUT:
